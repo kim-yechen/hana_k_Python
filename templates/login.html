@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>하나은행 테마 - 로그인</title>
+    <style>
+        body { background-color: #f4f7f7; font-family: 'Malgun Gothic', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 360px; text-align: center; }
+        .logo-area { text-align: left; margin-bottom: 20px; }
+        .logo-area img { height: 40px; }
+        h2 { color: #008485; margin-bottom: 25px; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 5px; color: #444; font-size: 14px; }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .btn-submit { width: 100%; padding: 12px; background-color: #008485; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .btn-submit:hover { background-color: #006a6b; }
+        .error { color: red; font-size: 13px; margin-bottom: 10px; }
+        .link-signup { margin-top: 15px; display: block; color: #008485; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-area">
+            <img src="/static/logo.jpg" alt="하나은행 로고">
+        </div>
+        <h2>금융 맞춤 서비스 로그인</h2>
+        {% if error %} <div class="error">{{ error }}</div> {% endif %}
+        <form action="/login" method="post">
+            <div class="input-group">
+                <label>아이디</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="input-group">
+                <label>비밀번호</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-submit">로그인</button>
+        </form>
+        <a href="/signup" class="link-signup">아직 회원이 아니신가요? 회원가입</a>
+    </div>
+</body>
+</html>

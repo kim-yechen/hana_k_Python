@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>하나은행 테마 - AI 금융 상담 챗봇</title>
+    <style>
+        body { background-color: #343541; font-family: 'Malgun Gothic', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; color: #ececf1; }
+        header { background-color: #008485; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .logo img { height: 35px; filter: brightness(0) invert(1); } /* 테마에 맞춰 로고 반전 처리 가능 */
+        .header-title { font-weight: bold; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .header-title img { width: 28px; height: 28px; border-radius: 50%; }
+        .back-btn { background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 4px; color: white; text-decoration: none; font-size: 13px; }
+        
+        .chat-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+        .chat-row { padding: 24px 15%; display: flex; gap: 20px; font-size: 15px; line-height: 1.6; }
+        .chat-row.user { background-color: #343541; }
+        .chat-row.assistant { background-color: #444654; border-top: 1px solid rgba(0,0,0,0.1); border-bottom: 1px solid rgba(0,0,0,0.1); }
+        
+        .avatar { width: 32px; height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; flex-shrink: 0; }
+        .user .avatar { background-color: #10a37f; color: white; }
+        .assistant .avatar { background-color: #008485; color: white; padding: 2px; }
+        .assistant .avatar img { width: 100%; height: 100%; border-radius: 4px; }
+        
+        .message-content { max-width: 85%; white-space: pre-wrap; }
+        
+        .input-area { padding: 20px 15% 40px 15%; background-image: linear-gradient(180deg,rgba(52,53,65,0),#343541 70%); position: relative; }
+        .input-box-wrapper { position: relative; display: flex; align-items: center; background-color: #40414f; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.2); }
+        .input-box-wrapper input { width: 100%; background: transparent; border: none; padding: 14px 60px 14px 16px; color: white; font-size: 15px; outline: none; }
+        .send-btn { position: absolute; right: 12px; background-color: #008485; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; }
+        .send-btn:hover { background-color: #006a6b; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-title">
+            <img src="/static/chatbot.jpg" alt="챗봇">
+            하나은행 AI 맞춤 상품 상담 (ChatGPT Style)
+        </div>
+        <div>
+            <a href="/main" class="back-btn">← 메인화면으로</a>
+        </div>
+    </header>
+
+    <div class="chat-container" id="chatContainer">
+        <!-- 첫 기본 웰컴 인사 메시지 -->
+        <div class="chat-row assistant">
+            <div class="avatar"><img src="/static/chatbot.jpg" alt="Bot"></div>
+            <div class="message-content">안녕하세요, {{ user.name }}님! 하나은행 AI 맞춤형 금융 상품 안내 챗봇입니다.
+고객님의 투자성향({{ user.investment_style }}) 및 직업 특징에 알맞은 예금 상품들을 상세히 비교 분석하고 상담해 드릴 수 있습니다. 궁금한 점을 편하게 말씀해 주세요!</div>
+        </div>
+    </div>
+
+    <div class="input-area">
+        <div class="input-box-wrapper">
+            <input type="text" id="userInput" placeholder="상품에 대해 궁금한 점을 입력하세요..." onkeypress="if(event.keyCode==13) sendMessage()">
+            <button class="send-btn" onclick="sendMessage()">전송</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const inputEl = document.getElementById('userInput');
+            const text = inputEl.value.trim();
+            if (!text) return;
+            
+            inputEl.value = '';
+            const container = document.getElementById('chatContainer');
+            
+            // 1. 유저 메시지 렌더링
+            const userRow = document.createElement('div');
+            userRow.className = 'chat-row user';
+            userRow.innerHTML = `<div class="avatar">User</div><div class="message-content">${text}</div>`;
+            container.appendChild(userRow);
+            container.scrollTop = container.scrollHeight;
+            
+            // 2. 어시스턴트 로딩 메시지 생성
+            const botRow = document.createElement('div');
+            botRow.className = 'chat-row assistant';
+            botRow.innerHTML = `<div class="avatar"><img src="/static/chatbot.jpg" alt="Bot"></div><div class="message-content" id="loading">하나은행 AI가 최적의 답변을 생성 중입니다...</div>`;
+            container.appendChild(botRow);
+            container.scrollTop = container.scrollHeight;
+            
+            // 3. 백엔드 API 통신 수행
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
+                });
+                const data = await response.json();
+                document.getElementById('loading').id = ''; 
+                botRow.querySelector('.message-content').innerText = data.reply;
+            } catch (err) {
+                document.getElementById('loading').innerText = '답변을 가져오는 중 오류가 발생했습니다.';
+            }
+            container.scrollTop = container.scrollHeight;
+        }
+    </script>
+</body>
+</html>

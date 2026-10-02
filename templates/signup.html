@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>하나은행 테마 - 회원가입</title>
+    <style>
+        body { background-color: #f4f7f7; font-family: 'Malgun Gothic', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 20px 0; }
+        .signup-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 450px; }
+        .logo-area { text-align: left; margin-bottom: 15px; }
+        .logo-area img { height: 35px; }
+        h2 { color: #008485; text-align: center; margin-bottom: 20px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .input-group { margin-bottom: 10px; }
+        .input-group.full { grid-column: span 2; }
+        .input-group label { display: block; margin-bottom: 4px; color: #444; font-size: 13px; font-weight: bold; }
+        .input-group input, .input-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .btn-submit { width: 100%; padding: 12px; background-color: #008485; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 15px; }
+        .btn-submit:hover { background-color: #006a6b; }
+        .error { color: red; font-size: 13px; text-align: center; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="logo-area">
+            <img src="/static/logo.jpg" alt="하나은행 로고">
+        </div>
+        <h2>맞춤 상품 추천을 위한 회원가입</h2>
+        {% if error %} <div class="error">{{ error }}</div> {% endif %}
+        <form action="/signup" method="post" enctype="multipart/form-data">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>아이디</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label>비밀번호</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="input-group">
+                    <label>이름</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="input-group">
+                    <label>이메일</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label>나이</label>
+                    <input type="number" name="age" required>
+                </div>
+                <div class="input-group">
+                    <label>성별</label>
+                    <select name="gender">
+                        <option value="남성">남성</option>
+                        <option value="여성">여성</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>투자성향</label>
+                    <select name="investment_style">
+                        <option value="안정형">안정형</option>
+                        <option value="안정추구형">안정추구형</option>
+                        <option value="위험선호형">위험선호형</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>직업</label>
+                    <input type="text" name="job" placeholder="예: 직장인, 사업자" required>
+                </div>
+                <div class="input-group full">
+                    <label>연소득 (만원 단위)</label>
+                    <input type="number" name="income" required>
+                </div>
+                <div class="input-group full">
+                    <label>프로필 사진</label>
+                    <input type="file" name="profile_img" accept="image/*">
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">가입완료</button>
+        </form>
+    </div>
+</body>
+</html>
